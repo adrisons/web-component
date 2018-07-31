@@ -1,0 +1,50 @@
+{
+  "reports": [
+
+    {
+      "id": 1,
+      "title": "REVENUE",
+      "total": 200000,
+      "currency": "€",
+      "parts": [{
+          "title": "Tablet",
+          "total": 120000
+        },
+        {
+          "title": "Smartphone",
+          "total": 80000
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "IMPRESIONS",
+      "total": 50000000,
+      "currency": "",
+      "parts": [{
+          "title": "Tablet",
+          "total": 20000000
+        },
+        {
+          "title": "Smartphone",
+          "total": 30000000
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "VISITS",
+      "total": 600000000,
+      "currency": "",
+      "parts": [{
+          "title": "Tablet",
+          "total": 480000000
+        },
+        {
+          "title": "Smartphone",
+          "total": 120000000
+        }
+      ]
+    }
+  ]
+}
