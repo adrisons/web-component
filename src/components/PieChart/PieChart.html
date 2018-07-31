@@ -1,0 +1,24 @@
+<!-- 
+Note: See that I’ve used class to have a prefix of pie__. 
+This is because in older browsers, we cannot isolate the DOM 
+using shadow DOM. When styling the DOM, we won’t be accidentally 
+styling, say, a class called name. 
+-->
+
+<template id="pie-chart-template">
+  <link rel="stylesheet" href="./components/PieChart/PieChart.css">
+  <div class="pie__chart-container">
+    <h2 class="pie__name">
+      <span class="pie__full-name"></span> (
+      <span class="pie__user-name"></span>)
+    </h2>
+    <p>Website:
+      <a class="pie__website"></a>
+    </p>
+    <div class="pie__hidden-content"></div>
+    <p class="pie__address"></p>
+
+
+  </div>
+</template>
+<script src="PieChart.js"></script>
