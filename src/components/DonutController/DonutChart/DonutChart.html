@@ -1,0 +1,16 @@
+<!-- 
+Note: See that I’ve used class to have a prefix of donut__. 
+This is because in older browsers, we cannot isolate the DOM 
+using shadow DOM. When styling the DOM, we won’t be accidentally 
+styling, say, a class called name. 
+-->
+
+<template id="donut-chart-template">
+  <link rel="stylesheet" href="./components/DonutController/DonutChart/DonutChart.css">
+  <div class="donut__chart-container">
+    <h3 class="donut__title"></h3>
+    <h2 class="donut__total"></h2>
+
+  </div>
+</template>
+<script src="DonutChart.js"></script>

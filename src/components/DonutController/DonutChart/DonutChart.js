@@ -1,11 +1,13 @@
+// DonutChart
+// Component for representing data as a donut chart
 (function () {
   const currentDocument = document.currentScript.ownerDocument;
 
-  class PieChart extends HTMLElement {
+  class DonutChart extends HTMLElement {
     constructor() {
       super();
 
-      // Setup a click listener on <pie-chart>
+      // Setup a click listener on <donut-chart>
       this.addEventListener('click', e => {
         this.refresh();
       });
@@ -13,8 +15,8 @@
 
     // Called when element is inserted in DOM
     connectedCallback() {
-      this.createShadowDom('#pie-chart-template');
-      this.getPieAttributes();
+      this.createShadowDom('#donut-chart-template');
+      this.getDonutAttributes();
       this.fetchData();
     }
 
@@ -33,15 +35,15 @@
 
     // Extract the attributes from our element
     // Note that we are going to specify our cards like:
-    // <pie-chart pie-id="1"></pie-chart>
-    getPieAttributes() {
-      this.pieId = this.getAttribute('pie-id');
+    // <donut-chart donut-id="1"></donut-chart>
+    getDonutAttributes() {
+      this.donutId = this.getAttribute('donut-id');
     }
 
     // Fetch the data to be shown and call render function
     fetchData() {
       // Fetch the data for that user Id from the API and call the render method with this data
-      fetch(`http://localhost:3000/reports/${this.pieId}`)
+      fetch(`http://localhost:3000/reports/${this.donutId}`)
         .then((response) => response.text())
         .then((responseText) => {
           this.render(JSON.parse(responseText));
@@ -56,8 +58,8 @@
       if (data) {
         // All of our components elements reside under shadow dom. So we created a this.shadowRoot property
         // We use this property to call selectors so that the DOM is searched only under this subtree
-        this.shadowRoot.querySelector('.pie__title').innerHTML = data.title;
-        this.shadowRoot.querySelector('.pie__total').innerHTML = `${data.total}${data.currency}`;
+        this.shadowRoot.querySelector('.donut__title').innerHTML = data.title;
+        this.shadowRoot.querySelector('.donut__total').innerHTML = `${data.total}${data.currency}`;
       }
 
     }
@@ -67,5 +69,5 @@
     }
   }
 
-  customElements.define('pie-chart', PieChart);
+  customElements.define('donut-chart', DonutChart);
 })();

@@ -1,14 +1,15 @@
+// DonutController 
+// Manages to create the diferent DonutCharts
 (function () {
     const currentDocument = document.currentScript.ownerDocument;
-    class PieController extends HTMLElement {
+    class DonutController extends HTMLElement {
         constructor() {
             super();
         }
 
         // Called when element is inserted in DOM
         connectedCallback() {
-            this.createShadowDom('#pie-controller-template');
-            // _fetchAndPopulateData(this);
+            this.createShadowDom('#donut-controller-template');
         }
 
 
@@ -26,5 +27,5 @@
         }
     }
 
-    customElements.define('pie-controller', PieController);
+    customElements.define('donut-controller', DonutController);
 })();

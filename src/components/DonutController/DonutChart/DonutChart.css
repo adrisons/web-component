@@ -1,5 +1,5 @@
 
-.pie__chart-container {
+.donut__chart-container {
   text-align: center;
   display: inline-block;
   border-radius: 5px;
@@ -10,6 +10,6 @@
   cursor: pointer;
 }
 
-.pie__chart-container:hover {
+.donut__chart-container:hover {
   box-shadow: 1px 1px 1px;
 }
