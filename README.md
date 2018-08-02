@@ -1,27 +1,15 @@
-# Reports web-component
+# polymer-webpack-loader demo
 
-## Getting Started
-To run the code I use [static-server](https://github.com/nbluis/static-server). 
+## Setup
 
-To install:
-```sh
-npm -g install static-server
 ```
-Now go to the index.html directory and run:
-```sh
-$ static-server
+npm i
+bower i
+npm start
 ```
 
-For obtaining the data to show I use [JSON Server](https://github.com/typicode/json-server) as a fake REST service, wich returns the data inserted in db.json. 
+## What's included
 
-To install just:
-```sh
-npm install -g json-server
-```
-
-To run execute this where the db.json file is:
-```sh
-json-server --watch db.json
-```
-
-Then navigate to [localhost](http://localhost:9080/).
+This demo shows how to do a simple "Hello, World" with polymer-webpack-loader.
+It includes a basic project that defines a Polymer element which uses ES Module
+syntax to `import` a dependency from the `node_modules` directory.

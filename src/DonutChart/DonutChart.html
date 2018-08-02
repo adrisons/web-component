@@ -1,0 +1,13 @@
+<template id="donut-chart-template">
+  <div class="donut__chart-container">
+    <h3 class="donut__title"></h3>
+    <h2 class="donut__total"></h2>
+    <div id="donut__chart"></div>
+  </div>
+</template>
+<script>
+  import {
+    DonutChart
+  } from './DonutChart.js';
+  window.customElements.define("donut-chart", DonutChart);
+</script>
