@@ -9,16 +9,11 @@ const currentDocument = document.currentScript.ownerDocument;
 export class DonutChart extends HTMLElement {
   constructor() {
     super();
-
-    // Setup a click listener on <donut-chart>
-    this.addEventListener('click', e => {
-      this.refresh();
-    });
   }
 
   // Called when element is inserted in DOM
   connectedCallback() {
-    this.createShadowDom('#donut-chart-template');
+    this.createShadowDom('.donut-chart-container');
     this.getDonutAttributes();
     this.fetchData();
 
@@ -30,11 +25,12 @@ export class DonutChart extends HTMLElement {
       mode: 'open'
     });
 
-    // Select the template and clone it. Finally attach the cloned node to the shadowDOM's root.
+    // Select the container and clone it. Finally attach the cloned node to the shadowDOM's root.
     // Current document needs to be defined to get DOM access to imported HTML
-    const template = currentDocument.querySelector(element);
-    const instance = template.content.cloneNode(true);
+    const container = currentDocument.querySelector(element);
+    const instance = container.cloneNode(true);
     shadowRoot.appendChild(instance);
+
   }
 
   // Extract the attributes from our element
@@ -60,24 +56,10 @@ export class DonutChart extends HTMLElement {
     if (data) {
       // All of our components elements reside under shadow dom. So we created a this.shadowRoot property
       // We use this property to call selectors so that the DOM is searched only under this subtree
-      this.shadowRoot.querySelector('.donut__title').innerHTML = data.title;
-      this.shadowRoot.querySelector('.donut__total').innerHTML = `${data.total}${data.currency}`;
+      let donut = donutChartD3(data, this.shadowRoot.querySelector("#donut-chart"));
 
-      var donut = donutChartD3()
-        .width(960)
-        .height(500)
-        .variable('total')
-        .category('category');
-
-
-      d3.select('#donut__chart')
-        .datum(data.parts) // bind data to the div
-        .call(donut); // draw chart in div
     }
 
   }
 
-  refresh() {
-    this.fetchData();
-  }
 }

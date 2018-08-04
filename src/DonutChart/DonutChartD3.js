@@ -1,158 +1,179 @@
 "use strict";
 import * as d3 from "d3";
-export default function () {
-    var width,
-        height,
-        margin = {
-            top: 10,
-            right: 10,
-            bottom: 10,
-            left: 10
-        },
-        colour = d3.scaleOrdinal(d3.schemeCategory20c), // colour scheme
-        variable, // value in data that will dictate proportions on chart
-        category, // compare data by
-        percentFormat = d3.format('.0%');
-
-    function chart(selection) {
-        selection.each(function (data) {
-
-            // Generate chart
-            // creates a new pie generator
-            var pie = d3.pie()
-                .value(function (d) {
-                    return d[variable];
-                })
-                .sort(null);
-
-            var slices = pie(data);
-            // append the svg object to the selection
-            var svg = d3.select("body").append('svg')
-                .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom)
-                .append('g')
-                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-
-
-            var left_legend = svg.append('g')
-                .attr("transform", "translate(" + (margin.left) + "," + (height) + ")")
-                .attr('class', 'legend')
-                .selectAll('text')
-                .data(slices)
-                .enter()
-                .append('text')
-                .text(function (d) {
-                    return '• ' + d.data.name;
-                })
-                .attr('fill', function (d) {
-                    return colour(d.data.name);
-                })
-                .attr('y', function (d, i) {
-                    return 20 * (i + 1);
-                })
-
-            var right_legend = svg.append('g')
-                .attr("transform", "translate(" + (width) + "," + (height) + ")")
-                .attr('class', 'legend')
-                .selectAll('text')
-                .data(slices)
-                .enter()
-                .append('text')
-                .text(function (d) {
-                    return '• ' + d.data.name;
-                })
-                .attr('fill', function (d) {
-                    return colour(d.data.name);
-                })
-                .attr('y', function (d, i) {
-                    return 20 * (i + 1);
-                })
-
-            // contructs and arc generator. This will be used for the donut. The difference between outer and inner
-            // radius will dictate the thickness of the donut
-            var radius = Math.min(width, height) / 2;
-            var arc = d3.arc()
-                .outerRadius(radius * 0.6)
-                .innerRadius(radius * 0.5);
-
-
-            // g element to keep elements within svg modular
-            svg.append('g').attr('class', 'slices');
-
-            // svg center element
-            svg.append('text')
-                .attr('class', 'toolCircle')
-                .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
-                .html(toolTipHTML(data)) // add text to the circle.
-                .style('font-size', '.9em')
-                .style('text-anchor', 'middle'); // centres text in tooltip
-
-            // add and colour the donut slices
-            var path = svg.select('.slices')
-                .datum(data).selectAll('path')
-                .data(pie)
-                .enter().append('path')
-                .attr('fill', function (d) {
-                    return colour(d.data[category]);
-                })
-                .attr('d', arc);
-
-
-            // Functions
-
-            // function to create the HTML string for the tool tip. Loops through each key in data object
-            // and returns the html string key: value
-            function toolTipHTML(data) {
-                var tip = "";
-                tip += '<tspan x="0">' + data.title + '</tspan>';
-                tip += '<tspan x="0" dy="1.2em">' + data.total + data.currency + '</tspan>';
-                return tip;
-            }
-        })
+export default function (data, selector) {
+    
+    
+    let total = 0;
+    for (let p of data.parts) {
+        total += p.value;
     }
+    // Set the dimensions of the canvas / graph
+    let margin = {
+            top: 30,
+            right: 30,
+            bottom: 30,
+            left: 30
+        },
+        height = 400 - margin.top - margin.bottom,
+        width = 450 - margin.left - margin.right;
+    // Create the svg element when donut-chart is specified
+    let svg = d3.select(selector)
+        .append('svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + 50 + margin.top + margin.bottom);
+    let chart = svg.append("g")
+        .attr("class", "chart")
+        .attr("transform", "translate(" + (width / 2 + margin.left) + "," + ((height / 2) + margin.top) + ")");
+    
+    let color = d3.scaleOrdinal(d3.schemeCategory20c)
+    
+    
+    let pie = d3.pie()
+        .sort(null)
+        .startAngle(0)
+        .endAngle(2 * Math.PI)
+        .value(function (d) {
+            return d.value;
+        });
+    
+    
+    
+    let formatNumber = function (value, currency) {
+        return new Intl.NumberFormat('es-ES').format(value) + currency;
+    }
+    
+    let innerRadius = height / 3;
+    let outerRadius = innerRadius + 15;
+    
+    // One arc for each part
+    let arc = d3.arc()
+        .outerRadius(outerRadius)
+        .innerRadius(innerRadius);
+    
+    // Draw chart
+    
+    
+    let arcs = chart.append("g")
+            .attr("class", "donut-arcs")
+        .selectAll(".arc")
+        .data(pie(data.parts))
+        .enter();   
+    
+    arcs.append("path")
+        .style("fill", function (d) {
+            return color(d.data.name);
+        })
+        .transition()
+        .attrTween('d', function (d) {
+            let i = d3.interpolate(d.startAngle, d.endAngle);
+            return function (t) {
+                d.endAngle = i(t);
+                return arc(d);
+            }
+        });
+    
+    
+    // Axis
+    let radius = d3.scaleLinear().range([innerRadius - 5, innerRadius]);
+    
+    chart.append("g")
+        .attr('class', 'donut-axis')
+        .selectAll(".axis")
+        .data(d3.range(4))
+        .enter().append("line")
+        .attr("class", "axis")
+        .attr("transform", function (d) {
+            return "rotate(" + d * 90 + ")";
+        })
+        .attr("x1", radius.range()[0])
+        .attr("x2", radius.range()[1]);
+    
+    
+    // Midle of the donut
+    let center = chart.append("g")
+        .attr('class', 'donut-center')
+    // Title
+    center.append("text")
+        .attr('dy', '-1.5em')
+        .attr('fill', '#C0C0C0')
+        .attr("text-anchor", "middle")
+        .attr('class', 'donut-text')
+        .text(data.title);
+    // Total
+    center.append("text")
+        .attr('fill', '#505050')
+        .attr('dy', '.3em')
+        .attr("text-anchor", "middle")
+        .attr('class', 'donut-number')
+        .text(formatNumber(total, data.currency));
+    
+    
+    
+        
+    
+    
+    
+    // Legends
+    let addLegend = function (part, x, y, right) {
+        var legends = svg.append('g')
+        let title = legends
+            .selectAll('legend.title')
+            .data([part])
+            .enter();
+        // Category name
+        title.append('text')
+            .text(function (d) {
+                return d.name;
+            })
+            .attr("transform", "translate(" + x + "," + y + ")")
+            .attr("text-anchor", right ? "end" : "left")
+            .attr('fill', function (d) {
+                return color(d.name);
+            })
+            .attr("class", "legend-name")
+    
+    
+        let percentage = ((part.value / total) * 100) + "%";
+        let formattedValue = formatNumber(part.value, data.currency);
+    
+        if (right) {
+            x = width + margin.left;
+        }
+        let numbers = legends
+            .selectAll('legend.numbers')
+            .data([part])
+            .enter()
+            .append('text')
+            .attr("transform", "translate(" + x + "," + y + ")")
+            .attr('dy', '1.5em')
+            .attr("text-anchor", right ? "end" : "left")
+    
+        // percentage
+        numbers.append('tspan')
+            .text(percentage)
+            .attr("class", "legend-percentage");
+        // value
+        numbers.append('tspan')
+            .text(formattedValue)
+            .attr('dx', '1em')
+            .attr('fill', '#C0C0C0')
+            .attr("class", "legend-value");
+    }
+    let y = height;
+    // Right legend
+    addLegend(data.parts[0], (width + margin.left), y, 1)
+    // Left legend
+    let legend_1 = addLegend(data.parts[1], (margin.left), y, 0);
+    
+    // BottomLine
+    y += 40;
+    svg.append("line")
+        .attr('stroke', '#C0C0C0')
+        .attr("stroke-width", 2)
+        .attr("x1", margin.left)
+        .attr("y1", y)
+        .attr("x2", width + margin.left)
+        .attr("y2", y);
 
-    // getter and setter functions. See Mike Bostocks post "Towards Reusable Charts" for a tutorial on how this works.
-    chart.width = function (value) {
-        if (!arguments.length) return width;
-        width = value;
-        return chart;
-    };
 
-    chart.height = function (value) {
-        if (!arguments.length) return height;
-        height = value;
-        return chart;
-    };
-
-    chart.margin = function (value) {
-        if (!arguments.length) return margin;
-        margin = value;
-        return chart;
-    };
-
-    chart.radius = function (value) {
-        if (!arguments.length) return radius;
-        radius = value;
-        return chart;
-    };
-
-    chart.colour = function (value) {
-        if (!arguments.length) return colour;
-        colour = value;
-        return chart;
-    };
-
-    chart.variable = function (value) {
-        if (!arguments.length) return variable;
-        variable = value;
-        return chart;
-    };
-
-    chart.category = function (value) {
-        if (!arguments.length) return category;
-        category = value;
-        return chart;
-    };
-
-    return chart;
 }

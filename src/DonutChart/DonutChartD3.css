@@ -1,0 +1,46 @@
+#donut-chart {
+    position: relative;
+    float: left;
+    width: 200px;
+}
+
+text.legend-name {
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 1em;
+}
+
+tspan.legend-percentage {
+    font-family: Arial;
+    font-size: 1em;
+}
+
+tspan.legend-value {
+    font-family: Arial;
+    font-size: 1em;
+}
+
+text.donut-text {
+    font-family: Arial;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+text.donut-number {
+    font-size: 2em;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+text.donut-text {
+    font-size: 1.5em;
+    font-family: Arial;
+}
+
+
+.axis {
+    fill: none;
+    stroke: #C0C0C0;
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+}
