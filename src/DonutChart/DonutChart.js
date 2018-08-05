@@ -56,7 +56,7 @@ export class DonutChart extends HTMLElement {
     if (data) {
       // All of our components elements reside under shadow dom. So we created a this.shadowRoot property
       // We use this property to call selectors so that the DOM is searched only under this subtree
-      let donut = donutChartD3(data, this.shadowRoot.querySelector("#donut-chart"));
+      donutChartD3(data, this.shadowRoot.querySelector("#donut-chart"));
 
     }
 

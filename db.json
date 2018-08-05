@@ -1,0 +1,44 @@
+{
+  "reports": [
+      {
+          "id": 1,
+          "title": "REVENUE",
+          "currency": "€",
+          "parts": [{
+                  "name": "Smartphone",
+                  "value": 120000000
+              },
+              {
+                  "name": "Tablet",
+                  "value": 480000000
+              }
+          ],
+          "data": [{
+                  "date": "2017-10-15",
+                  "total": 12
+              },
+              {
+                  "date": "2017-10-16",
+                  "total": 13
+              },
+              {
+                  "date": "2017-10-20",
+                  "total": 16
+              },
+              {
+                  "date": "2017-10-22",
+                  "total": 14
+              },
+              {
+                  "date": "2017-11-15",
+                  "total": 11
+              },
+              {
+                  "date": "2017-12-15",
+                  "total": 15
+              }
+          ]
+      }
+
+  ]
+}
